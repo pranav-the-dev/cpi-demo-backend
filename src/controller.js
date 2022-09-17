@@ -6,7 +6,6 @@ const databaseConnection = require('../database');
 const fetchAllUser = ((req, res) => {
   try {
     let sqlQuery = "SELECT * FROM student";
-    console.log("🚀 ~ file: controller.js ~ line 8 ~ fetchAllUser ~ sqlQuery", sqlQuery)
 
     databaseConnection.query(sqlQuery, (err, results) => {
       if (err) throw err;
@@ -17,6 +16,7 @@ const fetchAllUser = ((req, res) => {
   }
 });
 
+
 const fetchUserById = (req, res) => {
   let sqlQuery = "SELECT * FROM student WHERE id=" + req.params.id;
 
@@ -26,21 +26,28 @@ const fetchUserById = (req, res) => {
   });
 }
 
-const insertUser = (req, res) => {
-  const data = {
-    name: req.body.name,
-    address: req.body.address,
-    phone: req.body.phone,
-    email: req.body.email,
-    password: req.body.password
-  }
 
-  const sqlQuery = "INSERT INTO student SET ?";
-  databaseConnection.query(sqlQuery, data, (err, results) => {
-    if (err) throw err;
-    res.send(apiResponse(results));
-  });
+const insertUser = (req, res) => {
+  try {
+    const data = {
+      name: req.body.name,
+      address: req.body.address,
+      phone: req.body.phone,
+      email: req.body.email,
+      password: req.body.password
+    }
+
+    const insertQuery = "INSERT INTO student SET ?";
+    databaseConnection.query(insertQuery, data, (err, results) => {
+      if (err) throw err;
+      return res.send(apiResponse(results));
+    });
+  }
+  catch (error) {
+    console.log(error);
+  }
 }
+
 
 const updateUser = (req, res) => {
 
@@ -73,10 +80,14 @@ function apiResponse(results) {
   return JSON.stringify({ "status": 200, "error": null, "response": results });
 }
 
+function errorResponse(error) {
+  return JSON.stringify({ "status": 500, "error": error });
+}
+
 module.exports = {
   fetchAllUser: fetchAllUser,
   insertUser: insertUser,
   updateUser: updateUser,
   deleteUserById: deleteUserById,
   fetchUserById: fetchUserById
-};
+}

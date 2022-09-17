@@ -1,7 +1,7 @@
 // route work
 const express = require('express');
 
-const { fetchAllUser, fetchUserById, insertUser, updateUser, deleteUserById } = require('./controller');
+const { fetchAllUser, fetchUserById, fetchUserByEmail, insertUser, updateUser, deleteUserById } = require('./controller');
 
 const router = express.Router();
 
